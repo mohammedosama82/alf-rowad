@@ -1,0 +1,56 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="MasterPage" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+        <link rel="icon" href="..\images\alfanar_logo5.png">
+
+
+    <title>Rowad alfanar Program</title>
+    <asp:ContentPlaceHolder id="head" runat="server">
+    </asp:ContentPlaceHolder>
+    <style>
+body
+{
+    /*background-image:url(images/sky4.jpg);*/
+    background-position:center;
+    background-repeat:no-repeat;
+    background-size:cover;
+}        
+        .auto-style2 {
+            text-align: center;
+        }
+        .auto-style3 {
+            font-size: xx-large;
+            color: #003399;
+        }
+        .auto-style4 {
+            width: 305px;
+        }
+    </style>
+</head>
+<body >
+    <form id="form1" runat="server">
+        <div class="auto-style2" >
+
+            <strong><span class="auto-style3">Rowad alfanar Program</span><br />
+            <a href="index.aspx"><img src="images/alfanar_logo2.png" alt="alfanar_logo"  class="auto-style4" /></a><br />
+            <br />
+            <asp:Label ID="lbl_today" runat="server"></asp:Label>
+            <br />
+            <br />
+            <asp:LinkButton ID="lbtn_assessments" runat="server" href="index.html">Home</asp:LinkButton>
+            </strong></div>
+    <div>
+        <asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
+        
+            <p>
+                <br />
+            </p>
+        
+        </asp:ContentPlaceHolder>
+    </div>
+    </form>
+</body>
+</html>

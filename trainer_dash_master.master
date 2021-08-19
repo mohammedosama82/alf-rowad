@@ -1,0 +1,317 @@
+﻿<%@ Master Language="C#" %>
+<%@ Import Namespace="System.Data.SqlClient" %>
+<%@ Import Namespace="System.Data" %>
+<%@ Import Namespace="System.Globalization" %>
+<%@ Import Namespace="System.Web" %>
+<%@ Import Namespace="System.web.UI" %>
+<%@ Import Namespace="System.Web.UI.WebControls" %>
+<%@ Import Namespace="System.Configuration" %>
+
+
+<!DOCTYPE html>
+
+<script runat="server">
+    SqlConnection con = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString);
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        lbl_today.Text = DateTime.Now.ToString("dd/MM/yyyy hh:mm tt");
+
+        string str_candidate_info = "select trainer_name, trainer_email, trainer_job_title, trainer_telephone, trainer_file_number from trainers  where trainer_file_number='" + Session["trainer_file_number"] + "'";
+        con.Open();
+        SqlCommand cmd_candidate_info = new SqlCommand(str_candidate_info, con);
+        SqlDataReader read_candidate_info = cmd_candidate_info.ExecuteReader();
+        if (read_candidate_info.HasRows == false)
+        {
+            read_candidate_info.Close();
+            con.Close();
+            Response.Redirect("trainer_login.aspx");
+
+        }
+        else
+        {
+            while (read_candidate_info.Read())
+            {
+
+                lbl_name.Text = (read_candidate_info["trainer_name"].ToString());
+                lbl_email.Text = (read_candidate_info["trainer_email"].ToString());
+                lbl_job_title.Text = (read_candidate_info["trainer_job_title"].ToString());
+                lbl_tel.Text = (read_candidate_info["trainer_telephone"].ToString());
+                lbl_file_number.Text = (read_candidate_info["trainer_file_number"].ToString());
+
+            }
+            read_candidate_info.Close();
+
+            con.Close();
+        }
+
+        string my_connection =ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;
+        SqlConnection con2 = new SqlConnection(my_connection);
+        con2.Open();
+        string sql11 = "select top 3 admin_name,announcement_date, announcement from announcements inner join admins on dbo.admins.admin_code = dbo.announcements.admin_code order by announcement_date desc" ;
+        SqlCommand cmd = new SqlCommand(sql11, con2);
+        SqlDataReader read= cmd.ExecuteReader();
+        if(read.HasRows==true)
+        {
+
+            ListView1.DataSource = read;
+            ListView1.DataBind();
+        }
+        read.Close();
+        con.Close();
+
+    }
+</script>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+        <link rel="icon" href="..\images\alfanar_logo5.png">
+
+    <title>Rowad alfanar</title>
+    <meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<link href="~/layout/styles/layout.css" rel="stylesheet" type="text/css" media="all"/>
+<style type="text/css">
+    .fontalfanar{
+        font-family:'Times New Roman', Times, serif;
+        font-size:small;
+
+    }
+    .container .demo{text-align:center;}
+.container .demo div{padding:8px 0;}
+.container .demo div:nth-child(odd){color:#FFFFFF; background:#CCCCCC;}
+.container .demo div:nth-child(even){color:#FFFFFF; background:#979797;}
+@media screen and (max-width:900px){.container .demo div{margin-bottom:0;}}
+/* DEMO ONLY */
+    .auto-style1 {
+        width: 191px;
+        height: 100px;
+    }
+</style>
+    <asp:ContentPlaceHolder id="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body id="top">
+    <div class="wrapper row0">
+  <div id="topbar" class="hoc clear"> 
+   
+    <div class="fl_left">
+      <ul class="nospace">
+        <li><a href="index.html"  style="color:white;"><i class="fas fa-home fa-lg"></i></a></li>
+        <li><a href="about_program.aspx">About</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="trainee_login.aspx">Trainee</a></li>
+        <li><a href="admin_login.aspx">Admin</a></li>
+       </ul>
+    </div>
+    <div class="fl_right">
+      <ul class="nospace">
+        <li><i class="fas fa-phone rgtspace-5"></i> Tel: </li>
+        <li><i class="fas fa-envelope rgtspace-5"></i> Email:</li>
+      </ul>
+    </div>
+    </div>
+</div>
+    <div class="wrapper row1">
+  <header id="header" class="hoc clear"> 
+    
+    <!-- ################################################################################################ -->
+      
+      <div style="float:left; height:20px;" id="logo" >
+      <h1 >
+          <span style="color:#0E74A5; text-transform:none; float:left;margin:0 350px 0 0; padding:0;">Rowad alfanar Program</span>              
+      </h1>
+      </div>  
+      <div  style="margin:0; padding:0; width:200px; height:20px;  float:right; display:inline-block; "> <img id="logo_img" src="..\images\alfanar_logo3.png"/> </div>    
+    
+    <!-- ################################################################################################ -->
+      </header>
+        <nav id="mainav" class="hoc clear"> 
+    
+    <ul class="clear">
+      <li class="active"><a href="index.html">Home</a></li>
+        <li>
+            <a class="drop"  style="text-transform:none;">alfanar</a>
+            <ul>
+                <li><a href="about_program.aspx">About Program</a></li>
+                <li><a href="https://www.alfanar.com/divisions">alfanar Divisions</a></li>
+                
+            </ul>
+        </li>
+      <li><a class="drop" >RAP</a>
+        <ul>
+          <li><a href="trainee_dashboard.aspx">Trainee Panel</a></li>
+          <li><a href="trainer_dashboard.aspx">Trainer Panel</a></li>
+          <li><a href="mentor_dashboard.aspx">Mentor Panel</a></li>      
+          <li><a href="#">Gallery</a></li>
+        </ul>
+      </li>
+      
+      <li><a href="trainee_login.aspx">Trainee</a></li>
+      <li><a href="trainer_login.aspx">Trainer</a></li>
+      <li><a href="mentor_login.aspx">Mentor</a></li>
+      <li><a href="logout.aspx">Logout</a></li>
+    </ul>
+    
+  </nav>
+</div>
+
+<div class="wrapper bgded overlay" style="background-image:url('../images/learning24.jpg');">
+  <div id="breadcrumb" class="hoc clear"> 
+    
+    <h6 class="heading">Trainer Dashboard</h6>
+    
+    
+  </div>
+</div>
+    <div class="wrapper row3">
+  <main class="hoc container clear"> 
+    <!-- main body -->
+    <!-- ################################################################################################ -->
+    <div class="sidebar one_quarter first"> 
+      <!-- ################################################################################################ -->
+      <h6>Trainer Dashboard</h6>
+      <nav class="sdb_holder">
+        <ul>
+          <li><a href="evaluate_trainee_by_trainer.aspx">Evaluate Trainee</a></li>
+          <li><a href="upload_dms.aspx">DMS</a></li>
+          <li><a href="upload_trainers_posts.aspx">Program Wall</a></li>
+            <li><a href="trainer_change_pwd.aspx">Change Password</a></li>
+        </ul>
+      </nav>
+      <div class="sdb_holder">
+        <h6>Trainer Info</h6>
+        <address>
+            Trainer Name:<asp:Label ID="lbl_name" runat="server"></asp:Label>
+            <br/>
+        Tel: <asp:Label ID="lbl_tel" runat="server"></asp:Label><br/>
+        Email: <asp:Label ID="lbl_email" runat="server"></asp:Label><br/>
+            File#: <asp:Label ID="lbl_file_number" runat="server"></asp:Label><br/>
+            Job Title: <asp:Label ID="lbl_job_title" runat="server"></asp:Label><br/>
+        </address>
+      </div>
+      <div class="sdb_holder">
+        <article>
+          <h6>Recent News</h6>
+          <p>
+              <asp:ListView ID="ListView1" runat="server">
+                  <ItemTemplate>
+                                    <div>
+                                        <table>
+                                           <tr style=" background-color:#FFF8DC; font-size:xx-small"><td> <asp:Label ID="announcement" Text='<%# Eval("announcement") %>' runat="server" /></td></tr>
+                                                <tr style="font-size:xx-small"><td>  <p> Posted at : <asp:Label ID="announcement_date" Text='<%# Eval("announcement_date", "{0:yyyy-MM-dd}") %>' runat="server"   /> --- by: <%#Eval("admin_name") %></p></td></tr>
+                                                                                    
+                                        </table>
+                                     </div>
+
+                                </ItemTemplate>
+              </asp:ListView>
+            </p>
+            
+        </article>
+      </div>
+      <!-- ################################################################################################ -->
+    </div>
+    <!-- ################################################################################################ -->
+    <!-- ################################################################################################ -->
+    <div class="content three_quarter"> 
+      <div class="wrapper row3">
+        <main class="hoc container clear">
+
+            <div class="content">
+
+                    <form id="form1" runat="server">
+
+                <h2><asp:Label CssClass="fontalfanar" ID="lbl_today" runat="server"></asp:Label>
+                        </h2>             
+
+    <div >
+        <asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
+                
+        </asp:ContentPlaceHolder>
+    </div>
+    </form>
+                </div>
+            </main>
+
+            
+    </div>
+        </div>
+    <!-- / main body -->
+    <div class="clear"></div>
+    </main>
+    </div>
+    
+    
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+<!-- ################################################################################################ -->
+    
+
+    <div class="wrapper gradient">
+  <section id="cta" class="hoc container clear" style="padding:10px 0"> 
+    <!-- ################################################################################################ -->
+    <div class="sectiontitle" style="margin:0; max-width:none; text-align:center;">
+      <h6 class="heading">Don't Hestitate in Calling</h6>
+      <p>If you need any support</p>
+    </div>
+    <ul class="nospace clear">
+      <li class="one_third first">
+        <div class="block clear"><i class="fas fa-phone"></i> <span><strong>Give us a call:</strong> Telephone </span> </div>
+      </li>
+      <li class="one_third">
+        <div class="block clear"><i class="fas fa-envelope"></i> <span><strong>Send us a mail:</strong> Email</span> </div>
+      </li>
+      <li class="one_third">
+        <div class="block clear"><i class="fas fa-map-marker-alt"></i> <span><strong>Come visit us:</strong> Directions to <a href="#">our location</a></span> </div>
+      </li>
+    </ul>
+    <!-- ################################################################################################ -->
+  </section>
+</div>
+
+    <!-- ################################################################################################ -->
+    <!-- ################################################################################################ -->
+    <!-- ################################################################################################ -->
+    <div class="wrapper row4">
+        <footer id="footer" class="hoc clear">
+            <!-- ################################################################################################ -->
+            <div class="one_third first">
+                <h1 class="logoname"><span style="text-transform:none;">Rowad alfanar</span></h1>
+
+            </div>
+            <div class="one_third">
+                <h6 class="heading">Quick links</h6>
+                <ul class="nospace linklist">
+                    <li><a href="https://www.alfanar.com/" style="color:black;">alfanar</a></li>
+                    <li><a href="http://www.alfanarjobs.com/" style="color:black;">jobs</a></li>
+                    <li><a href="https://www.alfanar.com/International-presence" style="color:black;">International Presence</a></li>
+                    <li><a href="https://www.alfanar.com/contact" style="color:black;">Contact Us</a></li>
+                </ul>
+            </div>
+
+            <!-- ################################################################################################ -->
+        </footer>
+    </div>
+    <!-- ################################################################################################ -->
+    <!-- ################################################################################################ -->
+    <!-- ################################################################################################ -->
+    <div class="wrapper row5">
+        <div id="copyright" class="hoc clear">
+            <!-- ################################################################################################ -->
+            <p class="fl_left">Copyright &copy; 2021 - All Rights Reserved - <a href="#">Rowad alfanar</a></p>
+    <p class="fl_right">alfanar company </p>
+            <!-- ################################################################################################ -->
+        </div>
+    </div>
+    <!-- ################################################################################################ -->
+    <!-- ################################################################################################ -->
+    <!-- ################################################################################################ -->
+    <a id="backtotop" href="#top"><i class="fas fa-chevron-up"></i></a>
+
+    <!-- JAVASCRIPTS -->
+    <script src="../layout/scripts/jquery.min.js"></script>
+    <script src="../layout/scripts/jquery.backtotop.js"></script>
+    <script src="../layout/scripts/jquery.mobilemenu.js"></script>
+    
+</body>
+</html>
